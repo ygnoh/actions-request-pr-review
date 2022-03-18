@@ -2,11 +2,19 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 
 try {
-    const token = core.getInput("token");
-    const apiUrl = github.context.apiUrl;
+    const authFetch = (url, init) => fetch(
+        url,
+        {
+            headers: {
+                Authorization: `token ${core.getInput("token")}`
+            },
+            method: "get",
+            ...init
+        }
+    );
+    const fetchPRs = () => authFetch(`${github.context.payload.repository.url}/pulls`);
 
-    console.log("TOKEN: \n", token);
-    console.log("API URL: \n", apiUrl);
+    console.log(fetchPRs());
 } catch (e) {
     core.setFailed(e.message);
 }
