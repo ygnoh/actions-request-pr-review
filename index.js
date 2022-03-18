@@ -12,7 +12,9 @@ try {
     });
     const fetchPRs = () => authFetch(`${github.context.payload.repository.url}/pulls`);
 
-    console.log(fetchPRs());
+    fetchPRs().then(res => {
+        console.log(JSON.stringify(res, undefined, 2));
+    });
 } catch (e) {
     core.setFailed(e.message);
 }
