@@ -10,11 +10,12 @@ try {
         },
         url
     });
-    const fetchPRs = () => authFetch(`${github.context.payload.repository.url}/pulls`);
-
-    fetchPRs().then(res => {
-        console.log(JSON.stringify(res, undefined, 2));
-    });
+    console.log(github.context.payload.repository.url);
+    // const fetchPRs = () => authFetch(`${github.context.payload.repository.url}/pulls`);
+    //
+    // fetchPRs().then(res => {
+    //     console.log(JSON.stringify(res, undefined, 2));
+    // });
 } catch (e) {
     core.setFailed(e.message);
 }
