@@ -9,6 +9,15 @@ const authFetch = url => axios({
     },
     url
 }).then(res => res.data);
+const sendSlack = (channel, text) => axios({
+    method: "post",
+    headers: {
+        Authorization: `Bearer ${core.getInput("slackBotToken")}`,
+        "Content-Type": "application/json"
+    },
+    url: "https://slack.com/api/chat.postMessage",
+    data: {channel, text}
+});
 
 class Pull {
     constructor(pullInfo) {
@@ -52,8 +61,8 @@ const pulls = [];
             }
         }
 
-        console.log(pulls);
-        // todo send notifications
+        sendSlack("@yonggoo.noh", "HELLO!!"); // todo replace with user email
+        core.info("Messages sent");
     } catch (e) {
         core.setFailed(e.message);
     }
