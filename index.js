@@ -107,7 +107,7 @@ class User {
     static _instances = {};
 
     /**
-     * @param {{email: string}} userInfo
+     * @param {{login: string, email: string}} userInfo
      * @returns {User}
      */
     static create(userInfo) {
@@ -117,12 +117,13 @@ class User {
     }
 
     constructor(userInfo) {
-        const {email} = userInfo;
+        const {login, email} = userInfo;
 
         /**
          * @type {string}
          * @private
          */
+        this._login = login;
         // this._email = email;
         this._email = "yonggoo.noh@";
         /**
@@ -130,6 +131,10 @@ class User {
          * @private
          */
         this._requestedPRs = [];
+    }
+
+    get login() {
+        return this._login;
     }
 
     get name() {
@@ -151,14 +156,21 @@ class User {
 (async () => {
     try {
         const BASE_URL = github.context.payload.repository.url;
+
+        core.info(`Running for: ${BASE_URL}`);
+
         // const BASE_URL = "https://api.github.com/repos/ygnoh/actions-tutorial";
         const fetchPulls = () => authFetch(`${BASE_URL}/pulls`);
         const fetchReviewers = number => authFetch(`${BASE_URL}/pulls/${number}/requested_reviewers`)
             .then(({users/* , teams */}) => users); // 팀 단위로 리뷰를 요청한 경우는 고려하지 않는다
         const fetchUser = url => authFetch(url);
 
+        core.info("Fetching pulls...");
+
         for (const pullInfo of await fetchPulls()) {
             const pull = Pull.create(pullInfo);
+
+            core.info(`Fetching reviewers of #${pull.number}...`);
 
             for (const userInfo of await fetchReviewers(pull.number)) {
                 const user = User.create(await fetchUser(userInfo.url));
@@ -169,9 +181,12 @@ class User {
 
         const users = User.getUsers();
 
+        core.info("Sending messages...");
+
         users.forEach(user => {
             if (!user.name) {
-                return; // oss public email 미등록 사용자
+                core.warning(`'${user.login}' has no public email.`);
+                return;
             }
 
             sendSlack(user, createRequestPRData(user));
