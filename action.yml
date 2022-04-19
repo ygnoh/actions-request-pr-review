@@ -4,6 +4,9 @@ inputs:
   token:
     description: "github token"
     required: true
+  slackBotToken:
+    description: "slack bot token for messaging"
+    required: true
 runs:
   using: node12
   main: index.js
