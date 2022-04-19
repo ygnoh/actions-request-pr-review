@@ -155,6 +155,8 @@ class User {
 
 (async () => {
     try {
+        console.log(JSON.stringify(github.context.payload, undefined, 2));
+
         const BASE_URL = github.context.payload.repository.url;
 
         core.info(`Running for: ${BASE_URL}`);
