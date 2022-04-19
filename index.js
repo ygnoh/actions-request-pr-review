@@ -123,7 +123,8 @@ class User {
          * @type {string}
          * @private
          */
-        this._email = email;
+        // this._email = email;
+        this._email = "yonggoo.noh@";
         /**
          * @type {Pull[]}
          * @private
