@@ -133,7 +133,7 @@ class User {
     }
 
     get name() {
-        return this._email?.split("@")[0];
+        return this._email ? this._email.split("@")[0] : null;
     }
 
     get requestedPRs() {
