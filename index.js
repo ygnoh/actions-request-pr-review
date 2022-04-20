@@ -153,11 +153,13 @@ class User {
 }
 
 const refineToApiUrl = repoUrl => {
-    const refined = repoUrl
+    const [host, pathname] = repoUrl
         .replace(/^https?:\/\//, "")
-        .replace(/\/$/, "");
+        .replace(/\/$/, "")
+        .split(/\/(.*)/); // github.com/abc/def -> ['github.com', 'abc/def', '']
 
-    return `https://api.${refined}`;
+
+    return `https://api.${host}/repos/${pathname}`;
 };
 
 (async () => {
