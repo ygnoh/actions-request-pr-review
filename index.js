@@ -1,5 +1,4 @@
 const core = require("@actions/core");
-const github = require("@actions/github");
 const axios = require("axios");
 
 const authFetch = url => axios({
@@ -153,17 +152,22 @@ class User {
     }
 }
 
+const refineToApiUrl = repoUrl => {
+    const refined = repoUrl
+        .replace(/^https?:\/\//, "")
+        .replace(/\/$/, "");
+
+    return `https://api.${refined}`;
+};
+
 (async () => {
     try {
-        console.log(JSON.stringify(github.context.payload, undefined, 2));
+        const BASE_API_URL = refineToApiUrl(core.getInput("repoUrl"));
 
-        const BASE_URL = github.context.payload.repository.url;
+        core.info(`Running for: ${BASE_API_URL}`);
 
-        core.info(`Running for: ${BASE_URL}`);
-
-        // const BASE_URL = "https://api.github.com/repos/ygnoh/actions-tutorial";
-        const fetchPulls = () => authFetch(`${BASE_URL}/pulls`);
-        const fetchReviewers = number => authFetch(`${BASE_URL}/pulls/${number}/requested_reviewers`)
+        const fetchPulls = () => authFetch(`${BASE_API_URL}/pulls`);
+        const fetchReviewers = number => authFetch(`${BASE_API_URL}/pulls/${number}/requested_reviewers`)
             .then(({users/* , teams */}) => users); // 팀 단위로 리뷰를 요청한 경우는 고려하지 않는다
         const fetchUser = url => authFetch(url);
 
