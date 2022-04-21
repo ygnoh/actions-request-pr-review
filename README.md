@@ -2,7 +2,7 @@
 
 Github Actions to request PR reviews using Slack
 
-<img src="https://user-images.githubusercontent.com/13075245/164355227-bb405486-d598-4414-b654-2129826b039c.png" width="500" alt="intro">
+<img src="https://user-images.githubusercontent.com/13075245/164359905-a63a6782-1a77-41ca-aed5-f453af1d99e2.png" width="500" alt="intro">
 
 ## Usage
 
