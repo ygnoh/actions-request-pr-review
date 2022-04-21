@@ -201,7 +201,6 @@ const refineToApiUrl = repoUrl => {
             }
 
             core.info(`Sending a message to ${user.name}...`);
-            console.log("slackBotToken:", core.getInput("slackBotToken"));
 
             return sendSlack(user, createRequestPRData(user));
         }));
