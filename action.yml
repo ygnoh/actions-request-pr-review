@@ -10,6 +10,9 @@ inputs:
   repoUrl:
     description: "repository url where action runs"
     required: true
+branding:
+  icon: bell
+  color: white
 runs:
   using: node12
   main: index.js
