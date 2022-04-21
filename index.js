@@ -123,8 +123,7 @@ class User {
          * @private
          */
         this._login = login;
-        // this._email = email;
-        this._email = "yonggoo.noh@";
+        this._email = email;
         /**
          * @type {Pull[]}
          * @private
@@ -153,11 +152,15 @@ class User {
 }
 
 const refineToApiUrl = repoUrl => {
+    const enterprise = !repoUrl.includes("github.com");
     const [host, pathname] = repoUrl
         .replace(/^https?:\/\//, "")
         .replace(/\/$/, "")
         .split(/\/(.*)/); // github.com/abc/def -> ['github.com', 'abc/def', '']
 
+    if (enterprise) {
+        return `https://${host}/api/v3/repos/${pathname}`;
+    }
 
     return `https://api.${host}/repos/${pathname}`;
 };
@@ -189,18 +192,21 @@ const refineToApiUrl = repoUrl => {
 
         const users = User.getUsers();
 
-        core.info("Sending messages...");
+        core.info("Starting sending messages...");
 
-        users.forEach(user => {
+        await Promise.all(users.map(user => {
             if (!user.name) {
                 core.warning(`'${user.login}' has no public email.`);
                 return;
             }
 
-            sendSlack(user, createRequestPRData(user));
-        });
+            core.info(`Sending a message to ${user.name}...`);
+            console.log("slackBotToken:", core.getInput("slackBotToken"));
 
-        core.info("Messages sent");
+            return sendSlack(user, createRequestPRData(user));
+        }));
+
+        core.info("Messages sent successfully");
     } catch (e) {
         core.setFailed(e.message);
     }
