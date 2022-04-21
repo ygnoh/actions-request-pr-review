@@ -8,34 +8,39 @@ const authFetch = url => axios({
     },
     url
 }).then(res => res.data);
-const createRequestPRData = (user) => ({
-    text: "좋은 아침이에요 :wave:",
-    blocks: [
-        {
-            type: "section",
-            text: {
-                type: "mrkdwn",
-                text: "좋은 아침입니다 :wave:"
+const createRequestPRData = (user) => {
+    const {name} = user;
+
+    return {
+        text: `Hello ${name} :wave:`,
+        blocks: [
+            {
+                type: "section",
+                text: {
+                    type: "mrkdwn",
+                    text: `Hello ${name} :wave:`
+                }
+            },
+            {
+                type: "section",
+                text: {
+                    type: "mrkdwn",
+                    text: `These are some PRs waiting for your precious review. Please review them for your colleagues :pray::`
+                }
+            },
+            {
+                type: "section",
+                text: {
+                    type: "mrkdwn",
+                    text: user.requestedPRs
+                        .map(({title, url}) => `• <${url}|${title}>`)
+                        .join("\n")
+                }
             }
-        },
-        {
-            type: "section",
-            text: {
-                type: "mrkdwn",
-                text: `<@${user.name}> 님의 리뷰를 애타게 기다리는 :pray: 동료의 PR이 있어요. 리뷰에 참여해 주세요:`
-            }
-        },
-        {
-            type: "section",
-            text: {
-                type: "mrkdwn",
-                text: user.requestedPRs
-                    .map(({title, url}) => `• <${url}|${title}>`)
-                    .join("\n")
-            }
-        }
-    ]
-});
+        ]
+    };
+};
+
 /**
  * @param {User} user
  * @param {object} data
@@ -173,7 +178,7 @@ const refineToApiUrl = repoUrl => {
 
         const fetchPulls = () => authFetch(`${BASE_API_URL}/pulls`);
         const fetchReviewers = number => authFetch(`${BASE_API_URL}/pulls/${number}/requested_reviewers`)
-            .then(({users/* , teams */}) => users); // 팀 단위로 리뷰를 요청한 경우는 고려하지 않는다
+            .then(({users/* , teams */}) => users); // Ignore teams as of now
         const fetchUser = url => authFetch(url);
 
         core.info("Fetching pulls...");
