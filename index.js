@@ -12,13 +12,13 @@ const createRequestPRData = (user) => {
     const {name} = user;
 
     return {
-        text: `Hello ${name} :wave:`,
+        text: `Hello <@${name}> :wave:`,
         blocks: [
             {
                 type: "section",
                 text: {
                     type: "mrkdwn",
-                    text: `Hello ${name} :wave:`
+                    text: `Hello <@${name}> :wave:`
                 }
             },
             {
