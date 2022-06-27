@@ -1,6 +1,11 @@
 const core = require("@actions/core");
 const axios = require("axios");
 
+const ENCODE_PAIR = {
+    "<": "&lt;",
+    ">": "&gt;"
+};
+const encodeText = text => text.replace(/[<>]/g, matched => ENCODE_PAIR[matched]);
 const authFetch = url => axios({
     method: "get",
     headers: {
@@ -33,6 +38,7 @@ const createRequestPRData = (user) => {
                 text: {
                     type: "mrkdwn",
                     text: user.requestedPRs
+                        .map(({title, url}) => ({title: encodeText(title), url}))
                         .map(({title, url}) => `• <${url}|${title}>`)
                         .join("\n")
                 }
