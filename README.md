@@ -1,5 +1,7 @@
 # request-pr-review
 
+> This repository is no longer maintained, please use the following action instead: https://github.com/naver/request-pr-review
+
 Github Actions to request PR reviews using Slack
 
 <img src="https://user-images.githubusercontent.com/13075245/164359905-a63a6782-1a77-41ca-aed5-f453af1d99e2.png" width="500" alt="intro">
